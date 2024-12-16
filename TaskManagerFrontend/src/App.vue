@@ -23,16 +23,6 @@
           <div>
             <p class="text-lg font-medium text-gray-800">Naslov zadatka</p>
             <p class="text-sm text-gray-600">Opis zadatka</p>
-            <div class="mt-2 space-x-2">
-              <span
-                class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded"
-                >Posao</span
-              >
-              <span
-                class="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded"
-                >Hitno</span
-              >
-            </div>
           </div>
           <!-- Task Actions -->
           <div class="flex space-x-2">
