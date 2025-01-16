@@ -1,58 +1,52 @@
 <script setup>
+import api from './services/api';
 import axios from "axios";
 import Task from './components/Task.vue';
-import Registracija from './components/Registracija.vue';
+import Registracija from './components/registracija.vue';
+import Prijava from './components/prijava.vue';
 import { ref, onMounted } from "vue";
 
 const tasks = ref([]);
 const showNoviTaskForm = ref(false);
 const showRegistracijaForm = ref(false);
+const showPrijavaForm = ref(false);
 const noviTaskNaslov = ref("");
 const noviTaskOpis = ref("");
 const noviTaskTags = ref("");
 
+onMounted(() => {
+    fetchTasks();
+});
 
 const fetchTasks = async () => {
     try {
-        const response = await axios.get("http://localhost:7000/tasks");
+      const response = await api.get("/tasks");
         tasks.value = response.data;
     } catch (error) {
-        console.error("Greska", error);
+      console.error("Greška u dohvaćanju zadataka", error);
     }
 };
 const addTask = async () => {
     if (!noviTaskNaslov.value.trim() || !noviTaskOpis.value.trim()) {
-        alert("Obavezni naslov i opis");
+        alert("Naslov i opis su obavezni");
         return;
     }
+
     const tagsArray = noviTaskTags.value.split(",").map(tag => tag.trim());
-
-    const user_id = localStorage.getItem("user_id");
-    if (!user_id) {
-        alert("Korisnik nije prijavljen");
-        return;
-    }
-
     try {
-        const response = await axios.post("http://localhost:7000/tasks/novi", {
+      const response = await api.post("/tasks/novi", {
             naslov: noviTaskNaslov.value,
             opis: noviTaskOpis.value,
-            tags: tagsArray,
-            userId: user_id
-
-          });
+            tags: tagsArray
+        });
         tasks.value.unshift(response.data);
-        noviTaskNaslov.value = "";
-        noviTaskOpis.value = "";
-        noviTaskTags.value = "";
-        clearTaskForm();
+        resetTaskForm();
         showNoviTaskForm.value = false;
     } catch (error) {
-        console.error("Greska", error);
+        console.error("Greška u dodavanju zadatka", error);
     }
 };
-
-const clearTaskForm = () => {
+const resetTaskForm = () => {
     noviTaskNaslov.value = "";
     noviTaskOpis.value = "";
     noviTaskTags.value = "";
@@ -61,15 +55,10 @@ const ukloniZadatak = (id) => {
     tasks.value = tasks.value.filter(task => task._id.toString() !== id);
 };
 
-onMounted(() => {
-    fetchTasks();
-});
 </script>
 
 <template>
-
   <div class="max-w-4xl mx-auto p-4">
-
     <!-- Header -->
     <header class="flex justify-between items-center bg-white p-4 shadow rounded-md mb-6">
       <h1 class="text-2xl font-bold text-gray-800">Task Manager</h1>
@@ -80,14 +69,20 @@ onMounted(() => {
         <button @click="showRegistracijaForm = !showRegistracijaForm" class="ml-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
           Registriraj se
         </button>
+        <button @click="showPrijavaForm = !showPrijavaForm" class="ml-2 bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">
+          Prijavi se
+        </button>
       </div>
     </header>
 
-<!-- Registracija -->
-     <Registracija v-if="showRegistracijaForm" />
+    <!-- Registration Form -->
+    <Registracija v-if="showRegistracijaForm" @close="showRegistracijaForm = false" />
 
+    <!-- Login Form -->
+    <Prijava v-if="showPrijavaForm" @close="showPrijavaForm = false" />
 
-     <div v-if="showNoviTaskForm" class="bg-white p-4 shadow rounded-md mb-6">
+    <!-- New Task Form -->
+    <div v-if="showNoviTaskForm" class="bg-white p-4 shadow rounded-md mb-6">
       <div class="mb-4">
         <label class="block text-gray-700 font-medium mb-2">Naslov zadatka:</label>
         <input v-model="noviTaskNaslov" type="text" class="w-full px-3 py-2 border rounded-md shadow-sm" />
@@ -105,9 +100,8 @@ onMounted(() => {
         <button @click="showNoviTaskForm = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Odustani</button>
       </div>
     </div>
-
-     <!-- Task List -->
-     <div class="bg-white p-4 shadow rounded-md">
+    <!-- Task List -->
+    <div class="bg-white p-4 shadow rounded-md">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Vaši zadaci</h2>
       <ul class="space-y-4">
         <Task
@@ -124,3 +118,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+<style scoped></style>

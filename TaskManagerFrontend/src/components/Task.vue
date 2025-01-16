@@ -1,4 +1,5 @@
 <script setup>
+import api from '../services/api';
 import TaskTag from "./TaskTag.vue";
 import { ref } from "vue";
 
@@ -24,49 +25,38 @@ const props = defineProps({
     required: true,
   },
 });
-
 const emit = defineEmits(["obrisiZadatak"]);
-
 const isZavrsen = ref(props.zavrsen);
-
 const oznaciZavrsen = async () => {
   try {
-    const response = await fetch(`http://localhost:7000/tasks/${props.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-    });
 
-    if (response.ok) {
-      console.log("Zadatak je oznacen kao dovrsen");
+    const response = await api.patch(`/tasks/${props.id}`, { zavrsen: true });
+    if (response.status === 200) {
+      console.log("Oznacen kao dovrsen");
       isZavrsen.value = true;
     } else {
-      console.error("Greska");
+      console.error("Greska u azuriranju");
     }
   } catch (error) {
     console.error("Greska", error);
   }
 };
-
 const obrisiZadatak = async () => {
-  if (!confirm("Obrisati zadatak?")) return;
+  if (!confirm("Zelite li obrisati zadatak?")) return;
 
   try {
-    const response = await fetch(`http://localhost:7000/tasks/${props.id}`, {
-      method: "DELETE",
-    });
-
-    if (response.ok) {
+    const response = await api.delete(`/tasks/${props.id}`);
+    if (response.status === 200) {
       console.log("Zadatak obrisan");
-      emit("obrisiZadatak", props.id); 
+      emit("obrisiZadatak", props.id);
     } else {
-      console.error("Greska");
+      console.error("Greska u brisanju zadatka");
     }
   } catch (error) {
     console.error("Greska", error);
   }
 };
 </script>
-
 <template>
   <li
     :class="['flex flex-col p-4 rounded-md shadow', isZavrsen ? 'bg-green-100' : 'bg-gray-50']"
@@ -96,5 +86,4 @@ const obrisiZadatak = async () => {
     </div>
   </li>
 </template>
-
 <style scoped></style>
