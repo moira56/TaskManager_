@@ -3,7 +3,7 @@
       <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
         <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">Kreiraj račun</h2>
         <form @submit.prevent="handleRegister">
-          <div class="mb-6">
+            <div class="mb-6">
             <label for="username" class="block text-sm font-medium text-gray-800 mb-2">
               Korisničko ime
             </label>
@@ -11,7 +11,7 @@
               id="username"
               v-model="formData.username"
               type="text"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              class="w-full px-4 py-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               placeholder="Unesite korisničko ime"
               required
             />
@@ -24,7 +24,7 @@
               id="password"
               v-model="formData.password"
               type="password"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              class="w-full px-4 py-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               placeholder="Unesite lozinku"
               required
             />
@@ -38,10 +38,11 @@
         </form>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import axios from "axios";
+</template>
+
+
+<script setup>
+import axios from "axios";
   import { reactive } from "vue";
   
   const formData = reactive({
@@ -51,11 +52,10 @@
   
   const handleRegister = async () => {
     try {
-      const res = await axios.post("http://localhost:7000/users/register", {
+        const res = await axios.post("http://localhost:7000/users/register", {
         username: formData.username,
         password: formData.password,
       });
-  
       const user_id = res.data.user_id;
       localStorage.setItem("user_id", user_id);
   
@@ -63,7 +63,7 @@
       formData.username = "";
       formData.password = "";
     } catch (err) {
-      alert(
+        alert(
         "Neuspješna registracija: " +
           (err.response?.data?.error || err.message || "Nepoznata greška")
       );
@@ -87,4 +87,3 @@
     letter-spacing: 0.5px;
   }
   </style>
-  

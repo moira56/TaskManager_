@@ -4,13 +4,13 @@ import Task from './components/Task.vue';
 import Registracija from './components/Registracija.vue';
 import { ref, onMounted } from "vue";
 
-
 const tasks = ref([]);
 const showNoviTaskForm = ref(false);
 const showRegistracijaForm = ref(false);
 const noviTaskNaslov = ref("");
 const noviTaskOpis = ref("");
 const noviTaskTags = ref("");
+
 
 const fetchTasks = async () => {
     try {
@@ -20,13 +20,11 @@ const fetchTasks = async () => {
         console.error("Greska", error);
     }
 };
-
 const addTask = async () => {
     if (!noviTaskNaslov.value.trim() || !noviTaskOpis.value.trim()) {
         alert("Obavezni naslov i opis");
         return;
     }
-
     const tagsArray = noviTaskTags.value.split(",").map(tag => tag.trim());
 
     const user_id = localStorage.getItem("user_id");
@@ -41,7 +39,8 @@ const addTask = async () => {
             opis: noviTaskOpis.value,
             tags: tagsArray,
             userId: user_id
-        });
+
+          });
         tasks.value.unshift(response.data);
         noviTaskNaslov.value = "";
         noviTaskOpis.value = "";
@@ -58,7 +57,6 @@ const clearTaskForm = () => {
     noviTaskOpis.value = "";
     noviTaskTags.value = "";
 };
-
 const ukloniZadatak = (id) => {
     tasks.value = tasks.value.filter(task => task._id.toString() !== id);
 };
@@ -69,7 +67,9 @@ onMounted(() => {
 </script>
 
 <template>
+
   <div class="max-w-4xl mx-auto p-4">
+
     <!-- Header -->
     <header class="flex justify-between items-center bg-white p-4 shadow rounded-md mb-6">
       <h1 class="text-2xl font-bold text-gray-800">Task Manager</h1>
@@ -83,11 +83,11 @@ onMounted(() => {
       </div>
     </header>
 
-       <!-- Registracija -->
+<!-- Registracija -->
      <Registracija v-if="showRegistracijaForm" />
 
 
-    <div v-if="showNoviTaskForm" class="bg-white p-4 shadow rounded-md mb-6">
+     <div v-if="showNoviTaskForm" class="bg-white p-4 shadow rounded-md mb-6">
       <div class="mb-4">
         <label class="block text-gray-700 font-medium mb-2">Naslov zadatka:</label>
         <input v-model="noviTaskNaslov" type="text" class="w-full px-3 py-2 border rounded-md shadow-sm" />
@@ -106,8 +106,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Task List -->
-    <div class="bg-white p-4 shadow rounded-md">
+     <!-- Task List -->
+     <div class="bg-white p-4 shadow rounded-md">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Vaši zadaci</h2>
       <ul class="space-y-4">
         <Task
@@ -124,5 +124,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped></style>
