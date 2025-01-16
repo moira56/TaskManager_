@@ -23,12 +23,16 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = { username, password: hashedPassword };
-    await usersCollection.insertOne(newUser);
+    
+    const result = await usersCollection.insertOne(newUser);
 
-    res.status(201).json({ message: 'Korisnik uspješno registriran' });
+    res.status(201).json({ 
+        message: 'Registriran uspješno',
+        user_id: result.insertedId 
+    });
   } catch (error) {
-    console.error('Greška tijekom registracije:', error);
-    res.status(500).json({ error: 'Došlo je do problema tijekom registracije' });
+    console.error('Greška:', error);
+    res.status(500).json({ error: 'Dogodila se greška na serveru' });
   }
 });
 

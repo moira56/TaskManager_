@@ -87,6 +87,7 @@ router.post("/novi", async (req, res) => {
         const collection = db.collection("tasks");
 
         const { naslov, opis, tags } = req.body;
+        const user_id = req.body.userId;
 
         if (!naslov || !opis || !Array.isArray(tags)) {
             return res.status(400).json({ error: "Svi podaci moraju biti ispunjeni" });
@@ -97,6 +98,7 @@ router.post("/novi", async (req, res) => {
             opis,
             tags,
             zavrsen: false,
+            user_id
         };
 
         const result = await collection.insertOne(noviTask);

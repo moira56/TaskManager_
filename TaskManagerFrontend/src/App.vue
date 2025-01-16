@@ -29,20 +29,34 @@ const addTask = async () => {
 
     const tagsArray = noviTaskTags.value.split(",").map(tag => tag.trim());
 
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+        alert("Korisnik nije prijavljen");
+        return;
+    }
+
     try {
         const response = await axios.post("http://localhost:7000/tasks/novi", {
             naslov: noviTaskNaslov.value,
             opis: noviTaskOpis.value,
             tags: tagsArray,
+            userId: user_id
         });
         tasks.value.unshift(response.data);
         noviTaskNaslov.value = "";
         noviTaskOpis.value = "";
         noviTaskTags.value = "";
+        clearTaskForm();
         showNoviTaskForm.value = false;
     } catch (error) {
         console.error("Greska", error);
     }
+};
+
+const clearTaskForm = () => {
+    noviTaskNaslov.value = "";
+    noviTaskOpis.value = "";
+    noviTaskTags.value = "";
 };
 
 const ukloniZadatak = (id) => {
