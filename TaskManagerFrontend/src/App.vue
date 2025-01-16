@@ -1,10 +1,13 @@
 <script setup>
 import axios from "axios";
 import Task from './components/Task.vue';
+import Registracija from './components/Registracija.vue';
 import { ref, onMounted } from "vue";
+
 
 const tasks = ref([]);
 const showNoviTaskForm = ref(false);
+const showRegistracijaForm = ref(false);
 const noviTaskNaslov = ref("");
 const noviTaskOpis = ref("");
 const noviTaskTags = ref("");
@@ -56,10 +59,19 @@ onMounted(() => {
     <!-- Header -->
     <header class="flex justify-between items-center bg-white p-4 shadow rounded-md mb-6">
       <h1 class="text-2xl font-bold text-gray-800">Task Manager</h1>
-      <button @click="showNoviTaskForm = true" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-        Dodaj zadatak
-      </button>
+      <div>
+        <button @click="showNoviTaskForm = true" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+          Dodaj zadatak
+        </button>
+        <button @click="showRegistracijaForm = !showRegistracijaForm" class="ml-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+          Registriraj se
+        </button>
+      </div>
     </header>
+
+       <!-- Registracija -->
+     <Registracija v-if="showRegistracijaForm" />
+
 
     <div v-if="showNoviTaskForm" class="bg-white p-4 shadow rounded-md mb-6">
       <div class="mb-4">
