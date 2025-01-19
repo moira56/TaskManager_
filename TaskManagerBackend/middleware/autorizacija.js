@@ -14,17 +14,17 @@ const autorizacijaMiddleware = async (req, res, next) => {
 
   try {
     if (!token) {
-      return res.status(401).json({ error: 'Token nije dostavljen' });
+      return res.status(401).json({ error: 'Nije dostavljen token' });
     }
     const decoded = jwt.verify(token, JWT_SECRET);
     if (!decoded) {
-      return res.status(401).json({ error: 'Nevaljan JWT token' });
+      return res.status(401).json({ error: 'Nevaljani JWT token' });
     }
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    console.error('Greska u autentifikaciji', error);
-    res.status(500).json({ error: 'Greska u autentifikaciji' });
+    console.error('Greska', error);
+    res.status(500).json({ error: 'Greska' });
   }
 };
 export default autorizacijaMiddleware;
