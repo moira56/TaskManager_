@@ -1,11 +1,18 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const autorizacijaMiddleware = async (req, res, next) => {
-  console.log('Authorization Header:', req.headers.autorizacijaMiddleware);
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (token) {
+    console.log('Authorization Header: Bearer [MASKED]');
+  } else {
+    console.log('Authorization Header: Nema tokena');
+  }
 
   try {
-    let token = req.headers.authorization?.split(' ')[1];
-
     if (!token) {
       return res.status(401).json({ error: 'Token nije dostavljen' });
     }
